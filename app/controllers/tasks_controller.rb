@@ -7,8 +7,7 @@ class TasksController < ApplicationController
   end
   
   def show
-    @user = User.find(params[:id])
-    @task = @user.tasks.order(id: :desc).page(params[:page])
+    @tasks = Task.find(params[:id])
   end
   
   def new
