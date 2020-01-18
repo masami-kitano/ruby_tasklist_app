@@ -1,6 +1,6 @@
 class TasksController < ApplicationController
-  before_action :correct_user, only: [:show]
-  before_action :require_user_logged_in, only: [:index, :show]
+  before_action :correct_user, only: [:show, :edit]
+  before_action :require_user_logged_in, only: [:index, :show, :edit, :new, :destroy]
   
   def index
     @task = current_user.tasks.build
@@ -8,11 +8,11 @@ class TasksController < ApplicationController
   end
   
   def show
-    @tasks = Task.find(params[:id])
+    @task = current_user.tasks.find(params[:id])
   end
   
   def new
-    @task = Task.new
+    @task = current_user.tasks.new
   end
   
   def create
@@ -28,7 +28,7 @@ class TasksController < ApplicationController
   end
   
   def edit
-    @task = Task.find(params[:id])
+    @task = current_user.tasks.find(params[:id])
   end
   
   def update
@@ -58,9 +58,11 @@ class TasksController < ApplicationController
   end
   
   def correct_user
-    @task = current_user.tasks.find_by(id: params[:id])
-    unless @task
-      redirect_to login_path
+    if logged_in?
+      @task = current_user.tasks.find_by(id: params[:id])
+      unless @task
+        redirect_to root_url
+      end
     end
   end
 end
